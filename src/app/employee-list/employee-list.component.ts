@@ -20,6 +20,7 @@ export class EmployeeListComponent implements AfterViewInit, OnInit {
 
   ngOnInit() {
     this.dataSource = new EmployeeListDataSource();
+    console.log("DATASOURCE : " + this.dataSource.data.toString)
   }
 
   ngAfterViewInit() {

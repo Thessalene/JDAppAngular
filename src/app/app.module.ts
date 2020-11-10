@@ -15,7 +15,8 @@ import { DashboardComponent } from '../app/dashboard/dashboard.component';
 import { EmployeeListComponent } from '../app/employee-list/employee-list.component';
 import { NavigationComponent } from '../app/navigation/navigation.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import {MatGridListModule} from '@angular/material/grid-list';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTableModule } from '@angular/material/table'  
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -23,18 +24,12 @@ import { TreeComponent } from './tree/tree.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { DragDropComponent } from './drag-drop/drag-drop.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-
-const routes : Routes = [
-  { path : '', component : DashboardComponent},
-  { path : 'dashboard', component : DashboardComponent},
-  { path : 'tree', component : TreeComponent},
-  { path : 'dragdrop', component : DragDropComponent},
-  { path : 'list', component : EmployeeListComponent},
-]
+import { SettingsComponent } from './settings/settings.component';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
-    AppComponent, DashboardComponent, NavigationComponent, EmployeeListComponent, TreeComponent, DragDropComponent
+    AppComponent, DashboardComponent, NavigationComponent, EmployeeListComponent, TreeComponent, DragDropComponent, SettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -48,12 +43,13 @@ const routes : Routes = [
     MatButtonModule,
     MatPaginatorModule,
     MatGridListModule,
-    RouterModule.forRoot(routes),
     MatCardModule,
     MatMenuModule,
     LayoutModule,
     MatTreeModule,
     DragDropModule,
+    MatTableModule,
+    MatSortModule
   ],
   providers: [],
   bootstrap: [AppComponent]
