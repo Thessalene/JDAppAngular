@@ -8,6 +8,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { formatCurrency } from '@angular/common';
 import { ThrowStmt } from '@angular/compiler';
 import { DatePipe } from '@angular/common';
+import { FACTURES_COLLECTION, FACTURES_CODE, MONTH_ARRAY} from '../../models/constants';
 @Component({
   selector: 'app-upload-file',
   templateUrl: './upload-file.component.html',
@@ -163,16 +164,26 @@ export class UploadFileComponent implements OnInit {
 
       }
 
-      //this.firestore.collection('TestCollection')
-      var providerCode = "EXP"
-      var idDocument = "FACT_" + providerCode + "_" + this.uploadForm.value.doc_number + "_OCT20";
-
+      //format date
       this.myDate = Date();
       let latest_date =this.datePipe.transform(this.myDate, 'yyyy-MM-dd');
       console.log("NEW DATE : " + latest_date);
 
+      var month = "";
+      var year = "";
+      var yer = new Date(this.uploadForm.value.docDate)
+      
+      console.log("DATE MONTH : " + yer.getUTCMonth());
+      console.log("DATE YEAR : " + yer.getFullYear());
+
+      var lastDigitYear = yer.getFullYear().toString().substr(yer.getFullYear().toString().length - 2);
+
+      var providerCode = "EXP"
+      var idDocument = FACTURES_CODE + "_" + providerCode + "_" + this.uploadForm.value.doc_number + "_" + MONTH_ARRAY[yer.getUTCMonth()-1] + lastDigitYear;
+
+
       const collectionRef = this.firestore.collection('Factures_test');
-      collectionRef.doc("FACT_2020").collection("OCT20").doc(idDocument).set({
+      collectionRef.doc(FACTURES_CODE + "_" + yer.getFullYear()).collection("OCT20").doc(idDocument).set({
         doctype: this.uploadForm.value.doc_type,
         name: this.selectedImage.name,
         fact_date: this.uploadForm.value.docDate,
