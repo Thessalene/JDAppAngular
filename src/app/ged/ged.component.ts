@@ -20,7 +20,6 @@ export class GedComponent implements OnInit {
   constructor( @Inject(AngularFireStorage) private storage: AngularFireStorage, @Inject(FileService) private fileService: FileService) { }
   
   ngOnInit() {
-    this.fileService.getImageDetailList();
     
   }
 
@@ -58,9 +57,6 @@ export class GedComponent implements OnInit {
         })
       })
     ).subscribe();
-  }
-  view(){
-    this.fileService.getImage(this.file);
   }
 
 }

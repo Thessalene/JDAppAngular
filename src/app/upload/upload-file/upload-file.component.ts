@@ -5,7 +5,9 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize } from 'rxjs/operators';
 import { FileService } from 'src/app/services/file.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-
+import { formatCurrency } from '@angular/common';
+import { ThrowStmt } from '@angular/compiler';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-upload-file',
   templateUrl: './upload-file.component.html',
@@ -16,13 +18,10 @@ export class UploadFileComponent implements OnInit {
   uploadForm: FormGroup;
   selectedImage: any = null;
   url: string | ArrayBuffer;
-  id:string;
-  file:string;
-
-  selectedOption:string;
-  typeSelected2:string;
-  selectedOption2:string;
-  radioSelected:string;
+  id: string;
+  file: string;
+  selectedOption: string;
+  myDate: string;
 
   doctype = [
     "Facture fournisseur",
@@ -54,41 +53,44 @@ export class UploadFileComponent implements OnInit {
     "Salarié 3",
     "Salarié 4"
   ];
-  constructor(private firestore: AngularFirestore, private storage: AngularFireStorage, private fileService: FileService) { }
+
+  constructor(private firestore: AngularFirestore, private storage: AngularFireStorage, private datePipe : DatePipe) { }
 
   ngOnInit(): void {
     this.initForm();
-    this.fileService.getImageDetailList();
+    this.selectedOption = this.doctype[0];
   }
 
   initForm() {
     this.uploadForm = new FormGroup({
-      'doctype': new FormControl(null, Validators.required),
-      'doctype_detailed': new FormControl(null), //client, fournisseur ou employé
+      'doc_type': new FormControl(null, Validators.required),
+      'doc_number': new FormControl(null, Validators.required),
+      'doc_type_detailed': new FormControl(null), //client, fournisseur ou employé
       'docDate': new FormControl(null, Validators.required),
       'montant_tva': new FormControl(),
       'montant_ttc': new FormControl(),
-      'exampleRadios': new FormControl(),
+      'exampleRadios': new FormControl(null, Validators.required),
 
-})}
-
-onSubmit(){
-
-}
-
-  onSelectDocType(){
-    this.selectedOption= this.uploadForm.value.doctype;
+    })
   }
 
-  onSelectCFType(){
+  onSubmit() {
+    console.log(this.uploadForm.value)
+  }
+
+  onSelectDocType() {
+    this.selectedOption = this.uploadForm.value.doc_type;
+    this.uploadForm.setValue({ doc_type: this.selectedOption, doc_number: "000", doc_type_detailed: "none", docDate: "none", montant_tva: "none", montant_ttc: "none", exampleRadios: "none" });
+  }
+
+  /*onSelectCFType(){
     this.typeSelected2=this.selectedOption2;
   }
 
   onItemChange(value){
     this.radioSelected= value.target.value;
+ }*/
 
- }
-  
 
   showPreview(event: any) {
     console.log("SHOW PREVIEW ");
@@ -105,34 +107,90 @@ onSubmit(){
   }
 
   save() {
-    var name = this.selectedImage.name;
-    console.log("Save name : " + name);
-    /*const fileRef = this.storage.ref(name);
-    this.storage.upload(name, this.selectedImage).snapshotChanges().pipe(
-      finalize(() => {
-        fileRef.getDownloadURL().subscribe((url) => {
-          this.url = url;
-          console.log("Download url : " + this.url);
-          this.fileService.insertImageDetails(this.id,this.url); //insert into realtime database
+    if (this.selectedImage == null) {
+      alert("Veuillez choisir un document");
+    } else {
+      var name = this.selectedImage.name;
+      console.log("Save name : " + name);
+      var path = "factures/" + name;
+      var fileRef = this.storage.ref(path);
+
+      const filePath = 'factures/'+name;
+      const task = this.storage.upload(filePath, this.selectedImage).then(() => {
+        const ref = this.storage.ref(filePath);
+        const downloadURL = ref.getDownloadURL().subscribe(url => {
+          const Url = url; // for ts
+          this.url = url // with this you can use it in the html
+          console.log("URL : " + Url);
           this.savetoFirestore();
-          alert('Upload Successful');
         })
-      })
-    ).subscribe();*/
+      });
+
+        /*this.storage.upload(path, this.selectedImage).snapshotChanges().pipe(
+          finalize(() => {
+            fileRef.getDownloadURL().subscribe((url) => {
+              this.url = url;
+              console.log("Download url : " + this.url);
+              //this.fileService.insertImageDetails(this.id, this.url); //insert into realtime database
+              this.savetoFirestore();
+              alert('Upload Successful');
+            })
+          })
+        ).subscribe();*/
+      }
+
+
   }
 
-  savetoFirestore() {
-    this.firestore.collection('TestCollection').add({
-      id: this.id,
-      name : this.selectedImage.name,
-      field: this.url
-    })
-      .then(res => {
-        console.log("Response : " + JSON.stringify(res));
-      })
-      .catch(e => {
-        console.log("Response (error): " + JSON.stringify(e));
-      })
-  }
+    savetoFirestore() {
+      var factobject = {
+        doctype: this.uploadForm.value.doc_type,
+        name: this.selectedImage.name,
+        fact_date: this.uploadForm.value.docDate,
+        fact_number: this.uploadForm.value.doc_number,
+        provider : this.uploadForm.value.doc_type_detailed,
+        ttc: this.uploadForm.value.montant_ttc,
+        tva: this.uploadForm.value.montant_tva,
+        url: this.url,
+        deposit_date: Date()
+      }
 
-}
+      var objectToSave;
+
+      if(this.uploadForm.value.doc_type == ""){
+
+      } else {
+
+      }
+
+      //this.firestore.collection('TestCollection')
+      var providerCode = "EXP"
+      var idDocument = "FACT_" + providerCode + "_" + this.uploadForm.value.doc_number + "_OCT20";
+
+      this.myDate = Date();
+      let latest_date =this.datePipe.transform(this.myDate, 'yyyy-MM-dd');
+      console.log("NEW DATE : " + latest_date);
+
+      const collectionRef = this.firestore.collection('Factures_test');
+      collectionRef.doc("FACT_2020").collection("OCT20").doc(idDocument).set({
+        doctype: this.uploadForm.value.doc_type,
+        name: this.selectedImage.name,
+        fact_date: this.uploadForm.value.docDate,
+        fact_number: this.uploadForm.value.doc_number,
+        provider : this.uploadForm.value.doc_type_detailed,
+        ttc: this.uploadForm.value.montant_ttc,
+        tva: this.uploadForm.value.montant_tva,
+        url: this.url,
+        deposit_date: latest_date
+      })
+        .then(res => {
+          console.log("Response : " + JSON.stringify(res));
+          alert("document téléchargé avec succès.")
+        })
+        .catch(e => {
+          console.log("Response (error): " + JSON.stringify(e));
+          alert("Erreur de téléchargement.")
+        })
+    }
+
+  }

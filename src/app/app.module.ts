@@ -59,6 +59,9 @@ import { UploadFileComponent } from './upload/upload-file/upload-file.component'
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
+//Date format
+import { DatePipe } from '@angular/common'
+
 // Firebase credentials
 const firebaseConfig = {
   apiKey: environment.firebase.apiKey,
@@ -109,7 +112,8 @@ const firebaseConfig = {
     {
       provide: DROPZONE_CONFIG,
       useValue: DEFAULT_DROPZONE_CONFIG
-    }
+    },
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })
