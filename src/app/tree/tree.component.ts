@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { files } from './example-data';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 /** File node data with possible child nodes. */
 export interface FileNode {
@@ -26,7 +28,9 @@ export interface FlatTreeNode {
   templateUrl: './tree.component.html',
   styleUrls: ['./tree.component.scss']
 })
-export class TreeComponent {
+export class TreeComponent implements OnInit {
+  myArray:any[] = [];
+  myArray2:any[] = [];
 
   /** The TreeControl controls the expand/collapse state of tree nodes.  */
   treeControl: FlatTreeControl<FlatTreeNode>;
@@ -37,7 +41,7 @@ export class TreeComponent {
   /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
   dataSource: MatTreeFlatDataSource<FileNode, FlatTreeNode>;
 
-  constructor() {
+  constructor(private storage: AngularFirestore) {
     this.treeFlattener = new MatTreeFlattener(
       this.transformer,
       this.getLevel,
@@ -47,6 +51,30 @@ export class TreeComponent {
     this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
     this.dataSource.data = files;
+  }
+
+  
+  ngOnInit(): void {
+    this.storage
+       .collection("Factures_test") //reference to the collection created in firestore
+       .get() //get the entire collection
+       //subscribe =  asynchronously waiting on API to return data (comes from RxJS and is an Observable that will update when there is a change.)
+       .subscribe((snapshot) => { //the Firestore always returns snapshots of data
+         snapshot.docs.forEach((doc) => { // loop over the array of docs.
+           this.myArray.push(doc.id); //doc.data = the entire document --> object with one property there
+         });
+       });
+       this.storage
+       .collection("Factures_test") //reference to the collection created in firestore
+       .doc(this.myArray[0]) //FACT_2020
+       .collection("OCT20")
+       .get() //get the entire collection
+       //subscribe =  asynchronously waiting on API to return data (comes from RxJS and is an Observable that will update when there is a change.)
+       .subscribe((snapshot) => { //the Firestore always returns snapshots of data
+         snapshot.docs.forEach((doc) => { // loop over the array of docs.
+           this.myArray2.push(doc.id); //doc.data = the entire document --> object with one property there
+         });
+       });  
   }
 
   /** Transform the data to something the tree can read. */
