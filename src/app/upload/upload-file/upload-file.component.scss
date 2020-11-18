@@ -1,0 +1,40 @@
+* {
+    box-sizing: border-box;
+  }
+
+  img {
+    height: 50vh;
+    width: 40vw;
+  }
+
+  input[type="radio"]{
+    opacity: 1;
+}
+  
+  /* Create two equal columns that floats next to each other */
+  .column {
+    float: left;
+    padding: 10px;
+    height: 90vh; /* Should be removed. Only for demonstration */
+    text-align: center;
+  }
+
+  .left{
+    width: 30%;
+  }
+
+  .right{
+    width: 70%;
+  }
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  pdf-viewer {
+    display: block;
+    height: 80vh;
+  }

@@ -8,6 +8,7 @@ import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { GedComponent } from './ged/ged.component';
 import { SettingsComponent } from './settings/settings.component';
 import { TreeComponent } from './tree/tree.component';
+import { UploadFileComponent } from './upload/upload-file/upload-file.component';
 
 const routes : Routes = [
   { path : '', component : DashboardComponent},
@@ -19,6 +20,7 @@ const routes : Routes = [
   { path : 'ged', component : GedComponent},
   { path: 'auth/signin', component: SigninComponent },
   { path: 'auth/signup', component: SignupComponent },
+  { path: 'upload', component: UploadFileComponent },
 ]
 
 @NgModule({

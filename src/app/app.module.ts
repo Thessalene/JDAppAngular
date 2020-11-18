@@ -53,6 +53,11 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { GedComponent } from './ged/ged.component';
 import { SignupComponent } from './auth/signup/signup.component';
 import { SigninComponent } from './auth/signin/signin.component';
+import { UploadFileComponent } from './upload/upload-file/upload-file.component';
+
+//PDF Viewer 
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 // Firebase credentials
 const firebaseConfig = {
@@ -67,7 +72,7 @@ const firebaseConfig = {
 
 @NgModule({
   declarations: [
-    AppComponent, DashboardComponent, NavigationComponent, EmployeeListComponent, TreeComponent, DragDropComponent, SettingsComponent, GedComponent, SignupComponent, SigninComponent
+    AppComponent, DashboardComponent, NavigationComponent, EmployeeListComponent, TreeComponent, DragDropComponent, SettingsComponent, GedComponent, SignupComponent, SigninComponent, UploadFileComponent
   ],
   imports: [
     BrowserModule,
@@ -96,7 +101,9 @@ const firebaseConfig = {
     AngularFireAuthModule, // auth
     AngularFireStorageModule, // storage
     //Drop zone
-    DropzoneModule
+    DropzoneModule,
+    //PDF Viewer
+    PdfViewerModule,
   ],
   providers: [
     {
@@ -107,3 +114,7 @@ const firebaseConfig = {
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+//For PDF Viewer
+platformBrowserDynamic().bootstrapModule(AppModule);
+

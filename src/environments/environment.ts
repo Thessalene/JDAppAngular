@@ -12,7 +12,10 @@ export const environment = {
     storageBucket: "jdapp-dev.appspot.com",
     messagingSenderId: "555551907068",
     appId: "1:555551907068:web:35b7e042afc3c942a88b79"
-  }
+  },
+  //Database parameters
+  BULLETIN_CODE:"BP",
+  FACTURE_CODE:"FACT",
 };
 
 /*
