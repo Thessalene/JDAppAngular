@@ -59,6 +59,11 @@ import { UploadFileComponent } from './upload/upload-file/upload-file.component'
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
+//Anfular functions
+import {
+  AngularFireFunctionsModule,
+  REGION
+} from '@angular/fire/functions';
 //Date format
 import { DatePipe } from '@angular/common'
 
@@ -107,13 +112,16 @@ const firebaseConfig = {
     DropzoneModule,
     //PDF Viewer
     PdfViewerModule,
+    //Angular function
+    AngularFireFunctionsModule,
   ],
   providers: [
     {
       provide: DROPZONE_CONFIG,
       useValue: DEFAULT_DROPZONE_CONFIG
     },
-    DatePipe
+    DatePipe,
+    {provide : REGION, useValue: 'europe-west1'}
   ],
   bootstrap: [AppComponent]
 })

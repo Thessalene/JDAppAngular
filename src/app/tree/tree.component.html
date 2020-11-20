@@ -1,5 +1,16 @@
-ARRAY 1 : <p *ngFor="let doc of myArray">{{doc}}</p>
-ARRAY 2 : <p *ngFor="let doc of myArray2">{{doc}}</p>
+
+<div *ngFor="let month of monthArray; index as i">
+  MOIS : {{month}}
+
+  <div *ngFor="let object of getObjects()">  
+    <div *ngIf="object.month == month"> 
+        <p *ngFor="let obj of object.documents"> {{obj.name}}</p>
+      </div>
+  </div>
+
+  </div>
+
+
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
     <button mat-icon-button disabled></button>
