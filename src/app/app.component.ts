@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,18 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'JDApp';
+  isShowing = true;
+  isExpanded = true;
+  showSubMenu = true;
+
+  constructor() {
+  }
+  
+  @ViewChild('drawer', { static: false }) 
+  drawer: MatSidenav;
+
+
 }
+
+
+
