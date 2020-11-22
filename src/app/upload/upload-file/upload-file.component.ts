@@ -4,11 +4,13 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize } from 'rxjs/operators';
 import { FileService } from 'src/app/services/file.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { formatCurrency } from '@angular/common';
 import { ThrowStmt } from '@angular/compiler';
 import { DatePipe } from '@angular/common';
 import { FACTURES_COLLECTION, FACTURES_CODE, MONTH_ARRAY} from '../../models/constants';
+import { getPath } from '../../models/enums/eDocumentType';
+
 @Component({
   selector: 'app-upload-file',
   templateUrl: './upload-file.component.html',
@@ -23,6 +25,7 @@ export class UploadFileComponent implements OnInit {
   file: string;
   selectedOption: string;
   myDate: string;
+  urlTest:string;
 
   doctype = [
     "Facture fournisseur",
@@ -55,23 +58,23 @@ export class UploadFileComponent implements OnInit {
     "Salarié 4"
   ];
 
-  constructor(private firestore: AngularFirestore, private storage: AngularFireStorage, private datePipe : DatePipe) { }
+  constructor(private _formBuilder: FormBuilder, private firestore: AngularFirestore, private storage: AngularFireStorage, private datePipe : DatePipe) { }
 
   ngOnInit(): void {
     this.initForm();
     this.selectedOption = this.doctype[0];
+    this.urlTest="https://firebasestorage.googleapis.com/v0/b/jdapp-dev.appspot.com/o/factures%2FFAC0001.pdf?alt=media&token=3bb09624-c856-421d-89ea-fdfdecb76c2f";
   }
 
   initForm() {
     this.uploadForm = new FormGroup({
-      'doc_type': new FormControl(null, Validators.required),
-      'doc_number': new FormControl(null, Validators.required),
-      'doc_type_detailed': new FormControl(null), //client, fournisseur ou employé
-      'docDate': new FormControl(null, Validators.required),
-      'montant_tva': new FormControl(),
-      'montant_ttc': new FormControl(),
-      'exampleRadios': new FormControl(null, Validators.required),
-
+      doc_type : new FormControl(null, Validators.required),
+      doc_number : new FormControl(null, Validators.required),
+      doc_type_detailed : new FormControl(null, Validators.required), //client, fournisseur ou employé
+      docDate: new FormControl(null, Validators.required),
+      montant_tva: new FormControl(null, [Validators.required]),
+      montant_ttc: new FormControl(null, [Validators.required]),
+      exampleRadios: new FormControl(null),
     })
   }
 
@@ -81,17 +84,8 @@ export class UploadFileComponent implements OnInit {
 
   onSelectDocType() {
     this.selectedOption = this.uploadForm.value.doc_type;
-    this.uploadForm.setValue({ doc_type: this.selectedOption, doc_number: "000", doc_type_detailed: "none", docDate: "none", montant_tva: "none", montant_ttc: "none", exampleRadios: "none" });
+    this.uploadForm.setValue({ doc_type: this.selectedOption, doc_number: "", doc_type_detailed: "", docDate: "", montant_tva: "", montant_ttc: "", exampleRadios: "" });
   }
-
-  /*onSelectCFType(){
-    this.typeSelected2=this.selectedOption2;
-  }
-
-  onItemChange(value){
-    this.radioSelected= value.target.value;
- }*/
-
 
   showPreview(event: any) {
     console.log("SHOW PREVIEW ");
@@ -108,15 +102,16 @@ export class UploadFileComponent implements OnInit {
   }
 
   save() {
+    console.log(this.uploadForm.value)
     if (this.selectedImage == null) {
       alert("Veuillez choisir un document");
     } else {
       var name = this.selectedImage.name;
       console.log("Save name : " + name);
-      var path = "factures/" + name;
-      var fileRef = this.storage.ref(path);
 
-      const filePath = 'factures/'+name;
+      const filePath = getPath(this.uploadForm.value.doc_type) + name;
+      console.log("Path : " + filePath);
+
       const task = this.storage.upload(filePath, this.selectedImage).then(() => {
         const ref = this.storage.ref(filePath);
         const downloadURL = ref.getDownloadURL().subscribe(url => {
@@ -156,7 +151,6 @@ export class UploadFileComponent implements OnInit {
         deposit_date: Date()
       }
 
-      var objectToSave;
 
       if(this.uploadForm.value.doc_type == ""){
 
