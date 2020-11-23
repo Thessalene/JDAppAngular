@@ -29,17 +29,17 @@ export function getDocumentType(docType: string): EDocumentType {
  export function getPath(docType: EDocumentType): string {
     if(docType == EDocumentType.Facture){
         return "factures/"
-    } else if (EDocumentType.Devis) {
+    } else if (docType == EDocumentType.Devis) {
         return "devis/";
-    } else if (EDocumentType.Bon_commande) {
+    } else if (docType == EDocumentType.Bon_commande) {
         return "bon_commande/";
-    } else if (EDocumentType.Bon_livraison) {
+    } else if (docType == EDocumentType.Bon_livraison) {
         return "bon_livraison/";
-    } else if (EDocumentType.Bulletin) {
+    } else if (docType == EDocumentType.Bulletin) {
         return "bulletins/";
-    } else if (EDocumentType.RIB) {
+    } else if (docType == EDocumentType.RIB) {
         return "rib/"; 
-    } else if (EDocumentType.Autres) {
+    } else if (docType == EDocumentType.Autres) {
         return "autres/";
     }
  }
