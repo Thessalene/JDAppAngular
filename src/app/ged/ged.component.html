@@ -1,6 +1,13 @@
 <p>ged works!</p>
 
-<div class="dropzone" [dropzone]="config" (error)="onUploadError($event)" (success)="onUploadSuccess($event)"></div>
+<ngx-dropzone (change)="onSelect($event)">
+	<ngx-dropzone-label>Drop it, baby!</ngx-dropzone-label>
+	<ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+		<ngx-dropzone-label>{{ f.name }} </ngx-dropzone-label>
+	</ngx-dropzone-preview>
+</ngx-dropzone>
+
+<!-- <div class="dropzone" [dropzone]="config" (error)="onUploadError($event)" (success)="onUploadSuccess($event)"></div>-->
 
 <h2>File Upload</h2>
 <input type="text" placeholder="Save with Key" name="id" [(ngModel)]="id">

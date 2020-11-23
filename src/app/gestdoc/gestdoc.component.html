@@ -1,0 +1,153 @@
+<div class="row">
+    <div class="column left" style="background-color:rgb(226, 224, 224);">
+        <h2>Indexation</h2>
+        <form [formGroup]="uploadForm" (ngSubmit)="save()">
+            <div class="form-group">
+                <label class="my-1 mr-2" for="doc_type">Type de document</label>
+                <select class="custom-select my-1 mr-sm-2" id="doc_type" (change)="onSelectDocType()" placeholder="Type de document"
+                    formControlName="doc_type">
+                    <option *ngFor="let type of doctype" value="{{type}}">{{type}}</option>
+                </select>
+            </div>
+            <small class="error" *ngIf="uploadForm.get('doc_type').hasError('required') && uploadForm.get('doc_type').touched">
+                Le type de document est obligatoire.
+            </small>
+
+            <div class="form-group" *ngIf="selectedOption != 'Autres' && selectedOption != 'Salarié'">
+                <label class="my-1 mr-2" for="doc_number">Numéro de document</label>
+                <input type="number" class="form-control" formControlName="doc_number" placeholder="Numéro du document"> 
+            </div>
+             <small class="error" *ngIf="uploadForm.get('doc_number').hasError('required') && uploadForm.get('doc_number').touched">
+                Le numéro de la facture, du devis ou du bon est obligatoire.
+            </small>
+
+            <div class="form-group" *ngIf="selectedOption != 'Autres' && selectedOption != 'NONE'">
+                <label class="my-1 mr-2" for="selectTypeDetailed"
+                    *ngIf="selectedOption == 'Facture client'">Client</label>
+
+                <label class="my-1 mr-2" for="selectTypeDetailed" *ngIf="selectedOption == 'Salarié'">Salarié</label>
+                <label class="my-1 mr-2" for="selectTypeDetailed"
+                    *ngIf="selectedOption == 'Facture fournisseur' || selectedOption =='Devis' || selectedOption =='Bon de commande' || selectedOption == 'Bon de livraison' ">
+                    Fournisseur
+                </label>
+
+                <select class="custom-select my-1 mr-sm-2" id="selectTypeDetailed" formControlName="doc_type_detailed">
+                    <option selected value="NONE">Fournisseur/client/Salarié</option>
+                    <ng-container *ngFor="let fournisseur of fournisseurs">
+                        <option
+                            *ngIf="selectedOption == 'Facture fournisseur' || selectedOption =='Devis' || selectedOption =='Bon de commande' || selectedOption == 'Bon de livraison'">
+                            {{fournisseur}}</option>
+                    </ng-container>
+                    <ng-container *ngFor="let client of clients">
+                        <option *ngIf="selectedOption == 'Facture client'" [ngValue]="client">{{client}}</option>
+                    </ng-container>
+                    <ng-container *ngFor="let salarie of salaries">
+                        <option *ngIf="selectedOption == 'Salarié'" [ngValue]="salarie">{{salarie}}</option>
+                    </ng-container>
+                </select>
+            </div>
+            <small class="error" *ngIf="uploadForm.get('doc_type_detailed').hasError('required') && uploadForm.get('doc_type_detailed').touched">
+                Le client/fournisseur/salarié de document est obligatoire.
+            </small>
+
+            <div class="form-group" *ngIf="selectedOption == 'Salarié'" style="text-align: justify;">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" formControlName="exampleRadios" id="exampleRadios1"
+                        value="BP" checked>
+                    <label class="form-check-label" for="exampleRadios1">
+                        Bulletin de paie
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" formControlName="exampleRadios" id="exampleRadios2"
+                        value="CTR">
+                    <label class="form-check-label" for="exampleRadios2">
+                        Contrat
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" formControlName="exampleRadios" id="exampleRadios3"
+                        value="RIB">
+                    <label class="form-check-label" for="exampleRadios3">
+                        RIB
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" formControlName="exampleRadios" id="exampleRadios4"
+                        value="CVit">
+                    <label class="form-check-label" for="exampleRadios4">
+                        Carte vitale
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" formControlName="exampleRadios" id="exampleRadios5"
+                        value="OTH">
+                    <label class="form-check-label" for="exampleRadios5">
+                        Autres
+                    </label>
+                </div>
+            </div>
+            <small class="error" *ngIf="uploadForm.get('exampleRadios').hasError('required') && uploadForm.get('exampleRadios').touched">
+                Le type de document propre au salarié est obligatoire.
+            </small>
+
+            <div class="form-group">
+                <label class="my-1 mr-2" for="docDate">Date du document</label>
+                <input type="date" class="form-control" formControlName="docDate">
+                
+            </div>
+             <small class="error" *ngIf="uploadForm.get('docDate').hasError('required') && uploadForm.get('docDate').touched">
+                La date de document est obligatoire.
+            </small> 
+
+            <div class="row" *ngIf="selectedOption != 'Autres' && selectedOption != 'Salarié'">
+                <div class="col">
+                    <div class="form-group">
+                        <label class="my-1 mr-2" for="montant_tva">Montant TVA (en €)</label>
+                        <input type="number" class="form-control" formControlName="montant_tva">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label class="my-1 mr-2" for="montant_ttc">Montant TTC (en €)</label>
+                        <input type="number" class="form-control" formControlName="montant_ttc">
+                    </div>
+                </div>
+                
+            </div>
+            <small class="error" *ngIf="uploadForm.get('montant_ttc').invalid && uploadForm.get('montant_ttc').touched || 
+            uploadForm.get('montant_tva').invalid && uploadForm.get('montant_tva').touched">
+                Les montants sont obligatoires.
+            </small>
+        
+            <button type="submit" class="btn btn-primary" [disabled]="!uploadForm.valid">Sauvegarder</button>
+            <br>
+            <small>Seul les documents PDF sont acceptés.</small><br>
+        </form>
+
+    </div>
+    <div class="column right" >
+        <div class="col">
+            <div class="row"><pdf-viewer *ngIf="url" [src]="url" [render-text]="true" style="display: block;"></pdf-viewer></div>
+
+            <div class="row">
+                <ngx-dropzone (change)="showPreview($event)">
+                    <ngx-dropzone-label>Choisissez un ou plusieurs document(s) (pdf)</ngx-dropzone-label>
+                    <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+                        <ngx-dropzone-label>{{ f.name }} </ngx-dropzone-label>
+                    </ngx-dropzone-preview>
+                </ngx-dropzone>
+            </div>
+            
+        </div>
+       
+    </div>
+</div>
+
+    <h3>Résumé informations entrées</h3>
+    <p>Type de document : {{uploadForm.value.doc_type}} | Type de document Client : {{uploadForm.value.doc_type_detailed}}</p>
+    <p>Numéro du document Fournisseur: {{uploadForm.value.doc_number}}</p>
+    <p>Date du document Fournisseur: {{uploadForm.value.docDate}}</p>
+    <p>radio de document : {{uploadForm.value.exampleRadios}}</p>
+    <p>Montant TVA: {{uploadForm.value.montant_tva}} | Montant TTC: {{uploadForm.value.montant_ttc}}</p>
+

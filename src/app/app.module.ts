@@ -37,6 +37,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DropzoneModule } from 'ngx-dropzone-wrapper';
 import { DROPZONE_CONFIG } from 'ngx-dropzone-wrapper';
 import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
+
+//ngx dropzone
+import { NgxDropzoneModule } from 'ngx-dropzone';
+
  
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
  // Change this to your upload POST address:
@@ -60,7 +64,8 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 //Date format
-import { DatePipe } from '@angular/common'
+import { DatePipe } from '@angular/common';
+import { GestdocComponent } from './gestdoc/gestdoc.component'
 
 // Firebase credentials
 const firebaseConfig = {
@@ -75,7 +80,7 @@ const firebaseConfig = {
 
 @NgModule({
   declarations: [
-    AppComponent, DashboardComponent, NavigationComponent, EmployeeListComponent, TreeComponent, DragDropComponent, SettingsComponent, GedComponent, SignupComponent, SigninComponent, UploadFileComponent
+    AppComponent, DashboardComponent, NavigationComponent, EmployeeListComponent, TreeComponent, DragDropComponent, SettingsComponent, GedComponent, SignupComponent, SigninComponent, UploadFileComponent, GestdocComponent
   ],
   imports: [
     BrowserModule,
@@ -105,6 +110,7 @@ const firebaseConfig = {
     AngularFireStorageModule, // storage
     //Drop zone
     DropzoneModule,
+    NgxDropzoneModule,
     //PDF Viewer
     PdfViewerModule,
   ],

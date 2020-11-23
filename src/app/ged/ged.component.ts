@@ -15,6 +15,7 @@ export class GedComponent implements OnInit {
   url:string;
   id:string;
   file:string;
+  files: File[] = [];
   myDropzone;
 
   constructor( @Inject(AngularFireStorage) private storage: AngularFireStorage, @Inject(FileService) private fileService: FileService) { }
@@ -23,6 +24,24 @@ export class GedComponent implements OnInit {
     
   }
 
+  onSelect(event) {
+
+    console.log(event);
+
+    this.files.push(...event.addedFiles);
+   
+    console.log("Files selected : "+this.files)
+    console.log("Files selected : "+ JSON.stringify(this.files))
+
+    const formData = new FormData();
+    for (var i = 0; i < this.files.length; i++) { 
+      formData.append("file[]", this.files[i]);
+    }
+    console.log("Form data: "+ formData.toString)
+}
+
+
+
   config: DropzoneConfigInterface = {
     url: 'https://httpbin.org/post',
     maxFiles: 10,
@@ -30,6 +49,11 @@ export class GedComponent implements OnInit {
     acceptedFiles: 'application/pdf',
     createImageThumbnails: true,
     
+  }
+
+  onRemove(event) {
+    console.log(event);
+    this.files.splice(this.files.indexOf(event), 1);
   }
 
   onUploadSuccess(event : Event){
