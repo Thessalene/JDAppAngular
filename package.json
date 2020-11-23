@@ -29,6 +29,7 @@
     "ngx-dropzone-wrapper": "^10.0.1",
     "pdfjs-dist": "^2.5.207",
     "rxjs": "~6.5.5",
+    "sweetalert2": "^10.10.1",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"
   },

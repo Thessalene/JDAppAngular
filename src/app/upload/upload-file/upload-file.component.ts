@@ -10,6 +10,7 @@ import { ThrowStmt } from '@angular/compiler';
 import { DatePipe } from '@angular/common';
 import { FACTURES_COLLECTION, FACTURES_CODE, MONTH_ARRAY} from '../../models/constants';
 import { getPath } from '../../models/enums/eDocumentType';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 @Component({
   selector: 'app-upload-file',
@@ -190,11 +191,12 @@ export class UploadFileComponent implements OnInit {
       })
         .then(res => {
           console.log("Response : " + JSON.stringify(res));
-          alert("document téléchargé avec succès.")
+          Swal.fire('Déversement terminé', 'Document téléchargé avec succès.!', 'success')
         })
         .catch(e => {
           console.log("Response (error): " + JSON.stringify(e));
-          alert("Erreur de téléchargement.")
+          alert("Erreur de téléchargement.");
+          Swal.fire('Echec du déversement', 'Erreur de téléchargement. veuillez réessayer ultérieurement.', 'error')
         })
     }
 
