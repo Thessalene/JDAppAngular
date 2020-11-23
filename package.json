@@ -26,6 +26,7 @@
     "dropzone": "^5.7.2",
     "firebase": "^8.0.1",
     "ng2-pdf-viewer": "^6.3.2",
+    "ngx-dropzone": "^2.3.0",
     "ngx-dropzone-wrapper": "^10.0.1",
     "pdfjs-dist": "^2.5.207",
     "rxjs": "~6.5.5",

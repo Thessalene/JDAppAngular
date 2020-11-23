@@ -1,3 +1,4 @@
+export var SEPARATOR="/"
 
 export var FACTURES_COLLECTION = "Factures_test";
 export var BULLETIN_COLLECTION = "Bulletins";
